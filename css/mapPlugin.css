@@ -1,0 +1,61 @@
+::-webkit-scrollbar-track {
+    background-color: #f1f1f1
+}
+
+::-webkit-scrollbar-thumb {
+    background: #ccc
+}
+
+::-webkit-scrollbar-button {
+    height: 0;
+    width: 0
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px
+}
+
+body {
+    font-size: 12px;
+    background-color: #fff;
+    margin: 0;
+    color: #4c4c4c;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    -ms-touch-action: none;
+    touch-action: none
+}
+
+.MMap_contextMenu {
+    position: absolute;
+    border-top: 1px solid #adbfe4;
+    border-left: 1px solid #adbfe4;
+    border-right: 1px solid #8ba4d8;
+    border-bottom: 1px solid #8ba4d8;
+    padding: 0;
+    margin: 0;
+    width: auto;
+    visibility: hidden;
+    background: #fff;
+    z-index: 10000000
+}
+
+* {
+    scrollbar-base-color: #ccc;
+    scrollbar-3dlight-color: #ccc;
+    scrollbar-highlight-color: #ccc;
+    scrollbar-track-color: #f1f1f1;
+    scrollbar-arrow-color: #000;
+    scrollbar-shadow-color: #ccc;
+    scrollbar-dark-shadow-color: #ccc
+}
+
+div.MMap_cmDivider {
+    border-bottom: 1px solid #adbfe4;
+    font-size: 0;
+    padding: 1px;
+    margin: 0 6px;
+}

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas test by fabric</title>
+    <style>
+    </style>
+    <link rel="stylesheet" href="css/mapPlugin.css" type="text/css"/>
+    <script src="js/fabric.js"></script>
+    <script src="js/mapPlugin.js"></script>
+
+</head>
+<body>
+<div id="canvas" style="width:960px;height:720px;z-index:0;position: relative;left:50px;top:50px;">
+    <div class="MMap_contextMenu"
+         style="font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: arial, simsun; left: 450px; top: 300px; visibility: hidden;">
+        <div class="MMap_menu"
+             style="padding: 2px 6px; margin: 0px 2px; font-size: 12px; line-height: 17px; width: 90px; color: rgb(0, 0, 0); cursor: pointer;">
+            <span><span>关闭</span><span>&times;</span></span></div>
+        <div class="MMap_cmDivider"></div>
+        <div class="MMap_menu"
+             style="padding: 2px 6px; margin: 0px 2px; font-size: 12px; line-height: 17px; width: 90px; color: rgb(0, 0, 0); cursor: pointer;">
+            <span><span>姓名</span></span></div>
+    </div>
+</div>
+
+<script>
+    var map = mapPlugin("canvas", {
+        imgSrc: 'img/suzhouqiao.png',
+        imgWidth: 1055, imgHeight: 788,
+        fixedPositions: [{
+            type: 'circle', trueX: 0, trueY: 0, x: 0, y: 0, options: {
+                r: 0, color: 'red',
+                clickAction: 'console.log',
+            }
+        }, {
+            type: 'img',
+            trueX: 960,
+            trueY: 720,
+            x: 960,
+            y: 720,
+            options: {
+                height: 1,
+                width: 1,
+                src: 'img/camera.png',
+                clickAction: 'console.log',
+            }
+        }]
+    });
+    var move = function () {
+        var maxRoleY = 800;
+        var minRoleY = 300;
+        var minTruckY = 100;
+        var maxTruckY = 900;
+        map.refresh([{
+            type: 'img',
+            x: minRoleY + (maxRoleY - minRoleY) * Math.random(), y: 520,
+            options: {
+                height: 20,
+                width: 20,
+                src: 'img/role.png',
+                selectable: false
+            }
+        }, {
+            type: 'img',
+            x: minRoleY + (maxRoleY - minRoleY) * Math.random(), y: 550,
+            options: {
+                height: 20,
+                width: 20,
+                src: 'img/role.png',
+                selectable: false
+            }
+        }, {
+            type: 'img',
+            x: minTruckY + (maxTruckY - minTruckY) * Math.random(), y: 541,
+            options: {
+                height: 20,
+                width: 20,
+                src: 'img/truck.png',
+                selectable: false
+            }
+        }])
+    }
+    move();
+    map.addFixedPosition([{
+        type: 'img',
+        trueX: 417, trueY: 500,
+        options: {
+            height: 20,
+            width: 20,
+            src: 'img/speaker.png',
+            selectable: false
+        }
+    }, {
+        type: 'img',
+        trueX: 362, trueY: 370,
+        options: {
+            height: 20,
+            width: 20,
+            src: 'img/camera.png',
+            selectable: false
+        }
+    }, {
+        type: 'img',
+        trueX: 455, trueY: 560,
+        options: {
+            height: 20,
+            width: 20,
+            src: 'img/role.png',
+            selectable: true
+        }
+    }])
+    setInterval("move()", 2000);
+</script>
+</body>
+</html></html>
