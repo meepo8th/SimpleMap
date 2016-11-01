@@ -59,3 +59,38 @@ div.MMap_cmDivider {
     padding: 1px;
     margin: 0 6px;
 }
+
+#scalebox {
+    width: 29px;
+    height: 73px;
+    margin-top: 16px;
+    padding: 0 2px;
+}
+
+#scalebox .zoom_map {
+    width: 24px;
+    height: 16px;
+    margin: 0 auto;
+    padding: 10px 0;
+    background: url(../img/scale.png) no-repeat;
+    cursor: pointer;
+}
+
+#scalebox .zoom_map.zoom_in_map {
+    border-bottom: 1px #dfdfdf solid;
+    background-position: -3px 3px;
+}
+
+#scalebox .zoom_map.zoom_out_map {
+    background-position: -3px -156px;
+}
+.zdeps-1 {
+    box-shadow: 0 2px 6px rgba(0,0,0,.3);
+}
+.usel {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
