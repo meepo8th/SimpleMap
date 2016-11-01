@@ -229,7 +229,7 @@ var mapPlugin = function (eleId, options) {
                     var x = 0;
                     var y = 0;
                     if (e.e.movementX < 0) {
-                        if (map.width * (map.dynamicPositionCanvas.getZoom() - 1) - Math.abs(map.dynamicPositionCanvas.viewportTransform[4]) > 0) {
+                        if (map.width * 1.0 * (map.dynamicPositionCanvas.getZoom() - 1) - Math.abs(map.dynamicPositionCanvas.viewportTransform[4]) > 0) {
                             x = e.e.movementX;
                         }
                     } else {
@@ -238,7 +238,7 @@ var mapPlugin = function (eleId, options) {
                         }
                     }
                     if (e.e.movementY < 0) {
-                        if (map.height * (map.dynamicPositionCanvas.getZoom() - 1) - Math.abs(map.dynamicPositionCanvas.viewportTransform[5]) > 0) {
+                        if (map.height * 1.0 * (map.dynamicPositionCanvas.getZoom() - 1) - Math.abs(map.dynamicPositionCanvas.viewportTransform[5]) > 0) {
                             y = e.e.movementY;
                         }
                     } else {
