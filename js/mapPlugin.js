@@ -42,16 +42,28 @@ var createCanvas = function (eleId, layer, selectable) {
     var fabricCanvas = new fabric.Canvas(canvas.id);
     return fabricCanvas;
 }
+var createScaleDiv = function (eleId, mapName) {
+    var parentDoc = document.getElementById(eleId);
+    var scaleDiv = document.createElement('div');
+    scaleDiv.id = "scalebox";
+    scaleDiv.width = (parentDoc.style.width ? parentDoc.style.width : parentDoc.width ).split('px')[0];
+    scaleDiv.style = "position: absolute;top: 5px;right: 5px;z-index: 1000;background-color: white";
+    scaleDiv.setAttribute("class", "zdeps-1 usel");
+    scaleDiv.innerHTML = "<div class='zoom_map zoom_in_map' type='in' onclick='" + mapName + ".zoomOut()'></div>" +
+        "<div class='zoom_map zoom_out_map' type='out' onclick='" + mapName + ".zoomIn()'></div>"
+    parentDoc.appendChild(scaleDiv);
+}
 /**
  * 地图插件
  * @param eleId
  * @param options
  * @returns {{}}
  */
-var mapPlugin = function (eleId, options) {
+var mapPlugin = function (eleId, options, mapName) {
     var map = {};
     map.positionsMap = HashMap();
     map.eleId = eleId;
+    createScaleDiv(eleId, mapName); //scale box
     map.backCanvas = createCanvas(eleId, 0, false); //地图背景canvas
     map.dynamicPositionCanvas = createCanvas(eleId, 2, true); //动态canvas用于加载要定位的点
     map.width = 0;  //地图宽度
@@ -412,8 +424,10 @@ var mapPlugin = function (eleId, options) {
     map.zoom = function (zoomvalue) {
         map.dynamicPositionCanvas.setZoom(zoomvalue);
         map.backCanvas.setZoom(zoomvalue);
-        console.log(map.dynamicPositionCanvas.viewportTransform);
-        console.log(map.backCanvas.viewportTransform);
+        if (zoomvalue <= 1.05) {
+            map.dynamicPositionCanvas.viewportTransform = [1, 0, 0, 1, 0, 0];
+            map.backCanvas.viewportTransform = [1, 0, 0, 1, 0, 0];
+        }
     }
     /**
      * 缩小
