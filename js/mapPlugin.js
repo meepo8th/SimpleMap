@@ -217,6 +217,7 @@ var mapPlugin = function (eleId, options, mapName) {
                     }
                 }
                 else {
+                    map.setCursor("default");
                     map.isMoving = false;
                 }
             }
@@ -227,6 +228,7 @@ var mapPlugin = function (eleId, options, mapName) {
                     //do nothing
                 }
                 else {
+                    map.setCursor("pointer");
                     map.isMoving = true;
                 }
             }
@@ -238,6 +240,7 @@ var mapPlugin = function (eleId, options, mapName) {
                     //do nothing
                 }
                 else {
+                    map.setCursor("pointer");
                     var x = 0;
                     var y = 0;
                     if (e.e.movementX < 0) {
@@ -417,17 +420,25 @@ var mapPlugin = function (eleId, options, mapName) {
             map.refreshTimeId = setInterval("map.waitLoad()", 50);
         }
     }
+    map.getNowCenterPoint = function () {
+        return new fabric.Point((map.width - map.dynamicPositionCanvas.viewportTransform[4] ) / 2.0, (map.height - map.dynamicPositionCanvas.viewportTransform[5] ) / 2.0);
+
+    };
     /**
      * 设置zoom值
      * @param zoomvalue
      */
     map.zoom = function (zoomvalue) {
-        map.dynamicPositionCanvas.setZoom(zoomvalue);
-        map.backCanvas.setZoom(zoomvalue);
+        var nowCenterPoint = map.getNowCenterPoint();
+        map.dynamicPositionCanvas.zoomToPoint(nowCenterPoint, zoomvalue)
+        map.backCanvas.zoomToPoint(nowCenterPoint, zoomvalue);
         if (zoomvalue <= 1.05) {
             map.dynamicPositionCanvas.viewportTransform = [1, 0, 0, 1, 0, 0];
             map.backCanvas.viewportTransform = [1, 0, 0, 1, 0, 0];
         }
+    }
+    map.getZoom = function () {
+        return map.backCanvas.getZoom();
     }
     /**
      * 缩小
@@ -514,6 +525,12 @@ var mapPlugin = function (eleId, options, mapName) {
             map.showPosition(map.dynamicPositions[i], map.dynamicPositionCanvas);
         }
         map.dynamicPositionCanvas.renderAll();
+    }
+    map.setCursor = function (cursor) {
+        var elements = document.getElementsByClassName("upper-canvas");
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].style.cursor = cursor;
+        }
     }
     map.init(eleId, options);
     map.calcRelativeRect();
