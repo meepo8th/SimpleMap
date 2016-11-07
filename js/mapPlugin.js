@@ -65,6 +65,7 @@ var mapPlugin = function (eleId, options, mapName) {
     map.eleId = eleId;
     createScaleDiv(eleId, mapName); //scale box
     map.backCanvas = createCanvas(eleId, 0, false); //地图背景canvas
+    map.alertCanvas = createCanvas(eleId, 1, false); //地图背景canvas
     map.dynamicPositionCanvas = createCanvas(eleId, 2, true); //动态canvas用于加载要定位的点
     map.width = 0;  //地图宽度
     map.height = 0; //地图高度
@@ -85,6 +86,7 @@ var mapPlugin = function (eleId, options, mapName) {
     map.maxZoom = 2;
     map.minZoom = 1;
     map.isMoving = false;
+    map.alertPositions = []; //地图警报点，支持圆形跟矩形警报点
     /**
      * 创建唯一标记
      */
@@ -343,6 +345,8 @@ var mapPlugin = function (eleId, options, mapName) {
             option.strokeWidth = 0;
             option.radius = position['offsetX'];
             option.fill = position['color'];
+            option.stroke = undefined != position['stroke'] ? position['stroke'] : null;
+            option.strokeWidth = undefined != position['strokeWidth'] ? position['strokeWidth'] : 0;
         }
         if ('img' == position['type']) {
             option.top = Math.max(position['trueY'] - position['height'] / 2, 0);
@@ -350,6 +354,17 @@ var mapPlugin = function (eleId, options, mapName) {
             option.width = position['width'];
             option.height = position['height'];
         }
+        if ('square' == position['type']) {
+            option.top = Math.max(position['trueY'] - position['height'] / 2, 0);
+            option.left = Math.max(position['trueX'] - position['width'] / 2, 0);
+            option.width = position['width'];
+            option.height = position['height'];
+            option.fill = position['color'];
+            option.stroke = undefined != position['stroke'] ? position['stroke'] : null;
+            option.strokeWidth = undefined != position['strokeWidth'] ? position['strokeWidth'] : 0;
+        }
+        option.opacity = undefined != position['opacity'] ? position['opacity'] : 1;
+
         option.selectable = undefined != position['selectable'] ? position['selectable'] : false;
         option.positionType = undefined != position['positionType'] ? position['positionType'] : 'D';
         return option;
@@ -366,6 +381,10 @@ var mapPlugin = function (eleId, options, mapName) {
             if ("circle" == position['type']) {
                 var shape = new fabric.Circle(option);
                 canvas.add(shape);
+            }
+            if ("square" == position['type']) {
+                var square = new fabric.Rect(option);
+                canvas.add(square);
             }
             if ('img' == position['type']) {
                 map.loadImg++;
@@ -526,11 +545,73 @@ var mapPlugin = function (eleId, options, mapName) {
         }
         map.dynamicPositionCanvas.renderAll();
     }
+    /**
+     * 设置鼠标样式
+     * @param cursor
+     */
     map.setCursor = function (cursor) {
         var elements = document.getElementsByClassName("upper-canvas");
         for (var i = 0; i < elements.length; i++) {
             elements[i].style.cursor = cursor;
         }
+    }
+    /**
+     * 3级预警，蓝色、黄色、红色
+     * @type {string[]}
+     */
+    map.alertColor = ['blue', 'yellow', 'red'];
+    /**
+     * 添加一组报警点，支持圆形报警点与矩形报警点
+     * @param positions [{x:x,y:y,type:'square'|'circle',r:r,width:width,height:height,level:0|1|2}]
+     */
+    map.addAlertPositions = function (positions) {
+        if (positions && positions instanceof Array && positions.length > 0) {
+            for (var i = 0; i < positions.length; i++) {
+                map.addAlertPosition(positions[i]);
+            }
+        }
+    }
+    /**
+     * 创建一个报警点
+     * @param: position {x:x,y:y,type:'square'|'circle',r:r,width:width,height:height,level:0|1|2,extendId:extendId}
+     */
+    map.createAlertPosition = function (position) {
+        var mapPosition = {};
+        if (position && position instanceof Object) {
+            mapPosition.trueX = undefined != position['trueX'] ? position['trueX'] : null;
+            mapPosition.trueY = undefined != position['trueY'] ? position['trueY'] : null;
+            mapPosition.x = undefined != position['x'] ? position['x'] : null;
+            mapPosition.y = undefined != position['y'] ? position['y'] : null;
+            mapPosition.type = undefined != position['type'] ? position['type'] : '';
+            var type = position['type'];
+            if ('circle' == type) {
+                mapPosition.offsetX = position['r'];
+                mapPosition.offsetY = position['r'];
+            } else {
+                mapPosition.offsetX = position['width'] / 2.0;
+                mapPosition.offsetY = position['height'] / 2.0;
+                mapPosition.width = position['width'];
+                mapPosition.height = position['height'];
+            }
+            mapPosition.color = map.alertColor[position['level']];
+            mapPosition.stroke = "gray";
+            mapPosition.strokeWidth = 1;
+            mapPosition.positionType = position['positionType']
+            mapPosition.opacity = 0.2;
+            mapPosition.extendId = undefined != position['extendId'] ? position['extendId'] : map.uuid();
+            position['extendId'] = mapPosition.extendId;
+        }
+        map.positionsMap.set(mapPosition.extendId, mapPosition);
+        return mapPosition;
+    }
+
+    /**
+     * 添加一个报警点，支持圆形报警点与矩形报警点
+     * @param positions {x:x,y:y,type:'square'|'circle',r:r,width:width,height:height,level:0|1|2,extendId:extendId,positionType:'F'|'D'}
+     */
+    map.addAlertPosition = function (position) {
+        map.alertPositions.push(position);
+        map.showPosition(map.createAlertPosition(position), map.alertCanvas);
     }
     map.init(eleId, options);
     map.calcRelativeRect();
