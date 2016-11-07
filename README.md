@@ -1,3 +1,4 @@
 # SimpleMap
 simple javascript map plugin 
-set a pictrue as background,set some dynamic positions，set some fixed position to calc the map position
+使用fabric.js编写,一个简单的h5地图插件，使用任意一张图片做为地图背景，可在地图上添加固定点以及动态变化的点，动态点的位置可根据固定点给定的相对坐标自动变化，支持增加一个告警范围，具体用例请参照example.html中的用例
+参数说明请参考mapPlugin.js中的function以及注释
