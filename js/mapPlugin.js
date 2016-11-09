@@ -135,6 +135,8 @@ var mapPlugin = function (eleId, options, mapName) {
                 if ('img' == type) {
                     mapPosition.src = options['src'];
                 }
+                mapPosition.stroke = undefined != options['stroke'] ? options['stroke'] : null;
+                mapPosition.strokeWidth = undefined != options['strokeWidth'] ? options['strokeWidth'] : 0;
             }
         }
         map.positionsMap.set(mapPosition.extendId, mapPosition);
