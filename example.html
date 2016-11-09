@@ -82,6 +82,12 @@
             selectable: false
         }
     }, {
+        type: 'circle', trueX: 100, trueY: 200, options: {
+            r: 8, color: null,
+            stroke: 'black', strokeWidth: 2,
+            clickAction: 'console.log'
+        }
+    }, {
         type: 'img',
         trueX: 362, trueY: 370,
         options: {
@@ -100,9 +106,9 @@
             selectable: true
         }
     }])
-    map.addAlertPosition({trueX: 200, trueY: 300, type: 'square', width: 50, height: 40, level: 2,positionType:'F'});
-    map.addAlertPosition({trueX: 400, trueY: 200, type: 'circle', r: 20, level: 1,positionType:'F'});
-    map.addAlertPosition({trueX: 200, trueY: 300, type: 'circle', r: 10, level: 0,positionType:'F'});
+    map.addAlertPosition({trueX: 200, trueY: 300, type: 'square', width: 50, height: 40, level: 2, positionType: 'F'});
+    map.addAlertPosition({trueX: 400, trueY: 200, type: 'circle', r: 20, level: 1, positionType: 'F'});
+    map.addAlertPosition({trueX: 200, trueY: 300, type: 'circle', r: 10, level: 0, positionType: 'F'});
     setInterval("move()", 2000);
 </script>
 </body>

@@ -168,6 +168,78 @@ var mapPlugin = function (eleId, options, mapName) {
         return imgInfo;
     }
     /**
+     * 放大对象
+     * @param e
+     */
+    map.biggerE = function (e) {
+        var r = e.target.get('radius');
+        var width = e.target.get('width');
+        var height = e.target.get('height');
+        if (null == r) {
+            e.target.set({
+                srcWidth: width,
+                srcHeight: height,
+                width: width + map.overOffset,
+                height: height + map.overOffset
+            });
+        } else {
+            e.target.set({srcRadius: r, radius: r + map.overOffset});
+        }
+        map.dynamicPositionCanvas.renderAll();
+    }
+    /**
+     * 缩小对象
+     * @param e
+     */
+    map.smallerE = function (e) {
+        var r = e.target.get('srcRadius');
+        var width = e.target.get('srcWidth');
+        var height = e.target.get('srcHeight');
+        if (null == r && null != width && null != height) {
+            e.target.set({width: width, height: height});
+        } else if (null != r) {
+            e.target.set({radius: r});
+        }
+        map.dynamicPositionCanvas.renderAll();
+    }
+    /**
+     * 在事件发生位置画个圈
+     * @param e
+     */
+    map.circleE = function (e) {
+        var r = e.target.get('radius');
+        var width = e.target.get('width');
+        var height = e.target.get('height');
+        var left = e.target.get('left');
+        var top = e.target.get('top');
+        var extendId = e.target.get('extendId');
+        var newR = 0;
+        if (null == r) {
+            newR = width / 2 + 2;
+        } else {
+            newR = r + 2;
+        }
+        var shape = new fabric.Circle({
+            extendId: extendId + "circle",
+            type: 'circle', left: left - 2,
+            top: top - 2,
+            strokeWidth: 1,
+            radius: newR,
+            fill: null,
+            stroke: 'blue',
+        });
+        map.alertCanvas.add(shape);
+        map.alertCanvas.renderAll();
+    }
+    /**
+     * 取消事件位置的圈
+     * @param e
+     */
+    map.unCircleE = function (e) {
+        map.clearPositionsById(e.target.get('extendId') + "circle", map.alertCanvas);
+        map.alertCanvas.renderAll();
+    }
+    /**
      * 地图初始化方法，绑定事件并显示已经添加的点
      * @param eleId
      * @param options
@@ -180,20 +252,7 @@ var mapPlugin = function (eleId, options, mapName) {
             if (e.target.get('moveAction') && "" != e.target.get('moveAction')) {
                 eval(e.target.get('moveAction') + "(e.target)");
             } else {
-                var r = e.target.get('radius');
-                var width = e.target.get('width');
-                var height = e.target.get('height');
-                if (null == r) {
-                    e.target.set({
-                        srcWidth: width,
-                        srcHeight: height,
-                        width: width + map.overOffset,
-                        height: height + map.overOffset
-                    });
-                } else {
-                    e.target.set({srcRadius: r, radius: r + map.overOffset});
-                }
-                map.dynamicPositionCanvas.renderAll();
+                map.circleE(e);
             }
         });
         map.dynamicPositionCanvas.on('mouse:out', function (e) {
@@ -201,15 +260,7 @@ var mapPlugin = function (eleId, options, mapName) {
                 if (e.target.get('outAction') && "" != e.target.get('outAction')) {
                     eval(e.target.get('outAction') + "(e.target)");
                 } else {
-                    var r = e.target.get('srcRadius');
-                    var width = e.target.get('srcWidth');
-                    var height = e.target.get('srcHeight');
-                    if (null == r && null != width && null != height) {
-                        e.target.set({width: width, height: height});
-                    } else if (null != r) {
-                        e.target.set({radius: r});
-                    }
-                    map.dynamicPositionCanvas.renderAll();
+                    map.unCircleE(e);
                 }
             }
         });
@@ -414,9 +465,22 @@ var mapPlugin = function (eleId, options, mapName) {
         for (var i = map.dynamicPositionCanvas.getObjects().length - 1; i >= 0; i--) {
             if ("D" == map.dynamicPositionCanvas.getObjects()[i].positionType) {
                 map.positionsMap.remove(map.dynamicPositionCanvas.getObjects()[i].extendId);
+                map.clearPositionsById(map.dynamicPositionCanvas.getObjects()[i].extendId + "circle", map.alertCanvas);
                 map.dynamicPositionCanvas.getObjects().splice(i, 1);
             }
         }
+    };
+    /**
+     * 清除指定节点
+     */
+    map.clearPositionsById = function (extendId, canvas) {
+        for (var i = canvas.getObjects().length - 1; i >= 0; i--) {
+            if (extendId == canvas.getObjects()[i].extendId) {
+                map.positionsMap.remove(canvas.getObjects()[i].extendId);
+                canvas.getObjects().splice(i, 1);
+            }
+        }
+        canvas.renderAll();
     };
     /**
      * 刷新map
