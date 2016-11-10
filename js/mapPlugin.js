@@ -288,6 +288,16 @@ var mapPlugin = function (eleId, options, mapName) {
                 }
             }
         });
+        //鼠标滚动调整大小
+        map.dynamicPositionCanvas.on('mouse:wheel', function (e) {
+            if (e) {
+                if (e.e.wheelDelta > 0) {
+                    map.zoomOut();
+                } else {
+                    map.zoomIn();
+                }
+            }
+        });
         //拖动事件
         map.dynamicPositionCanvas.on('mouse:move', function (e) {
             if (e && map.isMoving) {
@@ -517,9 +527,11 @@ var mapPlugin = function (eleId, options, mapName) {
         var nowCenterPoint = map.getNowCenterPoint();
         map.dynamicPositionCanvas.zoomToPoint(nowCenterPoint, zoomvalue)
         map.backCanvas.zoomToPoint(nowCenterPoint, zoomvalue);
+        map.alertCanvas.zoomToPoint(nowCenterPoint, zoomvalue);
         if (zoomvalue <= 1.05) {
             map.dynamicPositionCanvas.viewportTransform = [1, 0, 0, 1, 0, 0];
             map.backCanvas.viewportTransform = [1, 0, 0, 1, 0, 0];
+            map.alertCanvas.viewportTransform = [1, 0, 0, 1, 0, 0];
         }
     }
     map.getZoom = function () {

@@ -63,10 +63,35 @@ div.MMap_cmDivider {
 #scalebox {
     width: 29px;
     height: 73px;
-    margin-top: 16px;
     padding: 0 2px;
+    border-radius: 10px;
+}
+#classic {
+    background-color:rgba(255, 255, 255, 0)
 }
 
+#classic .fright{
+    float: right;
+}
+#classic div{
+    height: 50px;
+    width: 60px;
+    padding:5px 0px 5px 13px ;
+    background-color: #eee;
+    z-index:1005;
+    cursor: pointer;
+    /*border:1px solid #383838;*/
+    /*box-shadow: 1px 0 0 #787878,*/
+    /*0 0px 0 #787878,*/
+    /*1px 1px 0 #787878,*/
+    /*0 1px 0 #787878;*/
+    /*margin-left: -1px;*/
+    /*margin-top: -1px;*/
+    text-align: right;
+}
+#classic img{
+    width:35px;
+}
 #scalebox .zoom_map {
     width: 24px;
     height: 16px;
@@ -74,6 +99,8 @@ div.MMap_cmDivider {
     padding: 10px 0;
     background: url(../img/scale.png) no-repeat;
     cursor: pointer;
+    box-sizing: content-box;
+    -webkit-box-sizing: content-box;
 }
 
 #scalebox .zoom_map.zoom_in_map {
@@ -93,4 +120,11 @@ div.MMap_cmDivider {
     -ms-user-select: none;
     -o-user-select: none;
     user-select: none;
+}
+
+#staff>div{
+    width:68px;height:5px;text-align: center
+}
+#staff .border{
+    border-left:2px solid black;border-right:2px solid black;border-bottom:2px solid black;
 }
