@@ -328,6 +328,7 @@ var mapPlugin = function (eleId, options, mapName) {
                     }
                     var delta = new fabric.Point(x, y);
                     map.dynamicPositionCanvas.relativePan(delta);
+                    map.alertCanvas.relativePan(delta);
                     map.backCanvas.relativePan(delta);
                 }
             }
