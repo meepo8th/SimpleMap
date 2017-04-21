@@ -21,7 +21,7 @@
         fixedPositions: [{
             type: 'circle', trueX: 0, trueY: 0, x: 0, y: 0, options: {
                 r: 0, color: 'red',
-                clickAction: 'console.log',
+                clickAction: 'test',
             }
         }, {
             type: 'img',
@@ -55,6 +55,7 @@
             type: 'img',
             x: minRoleY + (maxRoleY - minRoleY) * Math.random(), y: 550,
             options: {
+            title:"hello world",
                 height: 20,
                 width: 20,
                 src: 'img/role.png',
@@ -85,7 +86,7 @@
         type: 'circle', trueX: 100, trueY: 200, options: {
             r: 8, color: null,
             stroke: 'black', strokeWidth: 2,
-            clickAction: 'console.log'
+            clickAction: 'test'
         }
     }, {
         type: 'img',
@@ -110,6 +111,9 @@
     map.addAlertPosition({trueX: 400, trueY: 200, type: 'circle', r: 20, level: 1, positionType: 'F'});
     map.addAlertPosition({trueX: 200, trueY: 300, type: 'circle', r: 10, level: 0, positionType: 'F'});
     setInterval("move()", 2000);
+    function test(o){
+    	console.log(o.type);
+    	}
 </script>
 </body>
 </html></html>

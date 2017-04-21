@@ -53,6 +53,20 @@ var createScaleDiv = function (eleId, mapName) {
         "<div class='zoom_map zoom_out_map' type='out' onclick='" + mapName + ".zoomIn()'></div>"
     parentDoc.appendChild(scaleDiv);
 }
+function getStrLength(str) {
+    var len = 0;
+    for (var i=0; i<str.length; i++) {
+        var c = str.charCodeAt(i);
+        //单字节加1
+        if ((c >= 0x0001 && c <= 0x007e) || (0xff60<=c && c<=0xff9f)) {
+            len++;
+        }
+        else {
+            len+=2;
+        }
+    }
+    return len;
+}
 /**
  * 地图插件
  * @param eleId
@@ -113,7 +127,7 @@ var mapPlugin = function (eleId, options, mapName) {
             var type = position['type'];
             options = position['options'];
             if (options) {
-                mapPosition.title = options['title'];
+                mapPosition.title = undefined != options['title'] ? options['title'] : '';
                 mapPosition.desc = options['desc'];
                 if ('circle' == type) {
                     mapPosition.offsetX = options['r'];
@@ -247,6 +261,8 @@ var mapPlugin = function (eleId, options, mapName) {
     map.init = function (eleId, options) {
         map.width = document.getElementById(eleId).style.width.split("px")[0];
         map.height = document.getElementById(eleId).style.height.split("px")[0];
+        map.titleSize = undefined != options['titleSize'] ? options['titleSize'] : 10;
+        map.titleColor = undefined != options['titleColor'] ? options['titleColor'] : 'blue';
         map.infoDivPos = undefined != options['infoDivPos'] ? undefined != options['infoDivPos'] : map.infoDivPos;
         map.dynamicPositionCanvas.on('mouse:over', function (e) {
             if (e.target.get('moveAction') && "" != e.target.get('moveAction')) {
@@ -457,6 +473,17 @@ var mapPlugin = function (eleId, options, mapName) {
                     map.loadImg--;
                 }, option)
             }
+            if ("" != position['title'] && undefined != position['title']) {
+                map.alertCanvas.add(new fabric.Text(position['title'], {
+                    positonType: position['positionType'],
+                    extendId: position['extendId'] + "title",
+                    top: option['top'] - map.titleSize-1,
+                    left: option['left']-(getStrLength(position['title'])*map.titleSize/2-option['width'])/2,
+                    fill: map.titleColor,
+                    fontSize: map.titleSize
+                }));
+            }
+
         }
     };
     /**
@@ -477,6 +504,7 @@ var mapPlugin = function (eleId, options, mapName) {
             if ("D" == map.dynamicPositionCanvas.getObjects()[i].positionType) {
                 map.positionsMap.remove(map.dynamicPositionCanvas.getObjects()[i].extendId);
                 map.clearPositionsById(map.dynamicPositionCanvas.getObjects()[i].extendId + "circle", map.alertCanvas);
+                map.clearPositionsById(map.dynamicPositionCanvas.getObjects()[i].extendId + "title", map.alertCanvas);
                 map.dynamicPositionCanvas.getObjects().splice(i, 1);
             }
         }
